@@ -5,8 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-L7xj5C6vf+...==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <title>{% block title %}Chhohreivung    {% endblock %}</title>
 
-    <title>{% block title %}Chhohreivung    {% endblock %}</title>
+<!-- Essential Open Graph Tags -->
+<meta property="og:title" content="{% block og_title %}{{ post.title|default:'PC Ramduhawma' }}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{{ post.description|default:'I share articles on technology, web development, tutorials,politics and useful guides to help you learn and grow.' }}{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{% if post.image %}{{ post.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/default-og-image.jpg' %}{% endif %}{% endblock %}">
+<meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+<meta property="og:type" content="{% block og_type %}article{% endblock %}">
+<meta property="og:site_name" content="PC Ramduhawma">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}{{ post.title|default:'PC Ramduhawma - Learn with Fun' }}{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}{{ post.description|default:'High-quality tutorials on React, Angular, React Native, and modern web development' }}{% endblock %}">
+<meta name="twitter:image" content="{% block twitter_image %}{% if post.image %}{{ post.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/default-og-image.jpg' %}{% endif %}{% endblock %}">
+
+   
     <style>
         * {
             margin: 0;
