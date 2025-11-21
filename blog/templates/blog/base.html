@@ -10,9 +10,9 @@
 
 
 <!-- Essential Open Graph Tags -->
-<meta property="og:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma - Learn with Fun{% endif %}">
+<meta property="og:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma{% endif %}">
 
-<meta property="og:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}Learn coding with fun! High-quality tutorials on React, Angular, React Native, and modern web development. I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
+<meta property="og:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
 
 {% if post and post.image %}
 <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
