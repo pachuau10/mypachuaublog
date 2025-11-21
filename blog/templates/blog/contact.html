@@ -1,0 +1,92 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.page-box {
+    max-width: 800px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+.page-box h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.page-box p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #444;
+}
+
+/* Contact form */
+.page-box form {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.page-box form input,
+.page-box form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.page-box form textarea {
+    height: 140px;
+    resize: none;
+}
+
+.btn-send {
+    padding: 12px;
+    background: #ff9900;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-send:hover {
+    opacity: .9;
+}
+
+</style>
+<section class="page-container">
+    <div class="page-box">
+        <h1>Contact Us</h1>
+
+        <p>If you want to reach out, feel free to send a message below:</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <label>Your Name</label>
+            <input type="text" name="name" placeholder="Enter your name" required>
+
+            <label>Your Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+
+            <label>Message</label>
+            <textarea name="message" placeholder="Write your message..." required></textarea>
+
+            <button type="submit" class="btn-send">Send Message</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

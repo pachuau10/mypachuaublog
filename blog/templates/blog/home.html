@@ -1,0 +1,440 @@
+{% extends 'blog/base.html' %}
+{% load cloudinary %}
+
+
+{% block title %}Chhohreivung{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        padding: 60px 5%;
+        margin: 20px 5%;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hero-logo-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        border-radius: 50%;
+    }
+
+    .hero-title {
+        font-size: 48px;
+        font-weight: bold;
+        color: white;
+    }
+
+    .hero-subtitle {
+        background-color: #ff6b35;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 20px;
+        display: inline-block;
+        margin: 20px 0;
+    }
+
+    .tech-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .tech-icon {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .circle {
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .circle-1 {
+        width: 80px;
+        height: 80px;
+        top: 30px;
+        left: 10%;
+        background-color: #ff6b35;
+    }
+
+    .circle-2 {
+        width: 60px;
+        height: 60px;
+        bottom: 30px;
+        right: 15%;
+        background-color: #ff6b35;
+    }
+
+    .circle-3 {
+        width: 200px;
+        height: 200px;
+        top: -50px;
+        right: -50px;
+        background-color: #ff6b35;
+    }
+
+    .circle-4 {
+        width: 300px;
+        height: 300px;
+        bottom: -100px;
+        left: -100px;
+        background-color: #ff6b35;
+    }
+
+    /* Search and Filter */
+    .search-filter {
+        padding: 40px 5%;
+    }
+
+    .search-box {
+        max-width: 600px;
+        margin: 0 auto 30px;
+        position: relative;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 15px 20px 15px 45px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        font-size: 16px;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+    }
+
+    .filter-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .filter-tab {
+        padding: 12px 30px;
+        border: none;
+        background-color: white;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: #666;
+    }
+
+    .filter-tab.active {
+        background-color: #ff6b35;
+        color: white;
+    }
+
+    .filter-tab:hover {
+        background-color: #ff6b35;
+        color: white;
+    }
+
+    /* Blog Cards */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        padding: 40px 5%;
+    }
+
+    .blog-card {
+        background-color: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-10px);
+    }
+
+    .blog-image {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .blog-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .blog-content {
+        padding: 20px;
+    }
+
+    .blog-tag {
+        color: #ff6b35;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .blog-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+
+    .blog-description {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .blog-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .author-avatar {
+        width: 35px;
+        height: 35px;
+        background-color: #ff6b35;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+    }
+
+    .blog-meta-text {
+        flex: 1;
+    }
+
+    .author-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .blog-date {
+        color: #999;
+        font-size: 13px;
+    }
+
+    .no-posts {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    /* Pagination */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 40px 5%;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 10px 15px;
+        border-radius: 8px;
+        background-color: white;
+        color: #666;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .pagination a:hover {
+        background-color: #ff6b35;
+        color: white;
+    }
+
+    .pagination .current {
+        background-color: #ff6b35;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 32px;
+        }
+
+        .blog-grid {
+            grid-template-columns: 1fr;
+            padding: 20px 5%;
+        }
+    }
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.search-box .search-icon {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    outline: none;
+    font-size: 15px;
+}
+
+.search-btn {
+    padding: 8px 14px;
+    background: #ff9900;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.search-btn:hover {
+    opacity: 0.9;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+
+ 
+    
+    <div class="hero-content">
+        <div class="hero-logo">
+            <div class="hero-logo-icon"></div>
+            <h1 class="hero-title" style="color: #f7931e;">PC Ramduhawma</h1>
+        </div>
+        <div class="hero-subtitle">LEARN WITH FUN</div>
+
+    </div>
+</section>
+
+<section class="search-filter">
+<form method="GET" action="{% url 'home' %}" class="search-box">
+    <span class="search-icon"></span>
+    <input type="text" name="search" placeholder="Search" value="{{ search_query|default:'' }}">
+    <button type="submit" class="search-btn">Go</button>
+</form>
+
+    <div class="filter-tabs">
+        <a href="{% url 'home' %}" class="filter-tab {% if not selected_category %}active{% endif %}">All</a>
+        {% for category in categories %}
+        <a href="?category={{ category.slug }}" class="filter-tab {% if selected_category == category.slug %}active{% endif %}">
+            {{ category.name }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="blog-grid">
+    {% if posts %}
+        {% for post in posts %}
+        <a href="{% url 'post_detail' post.slug %}" class="blog-card">
+            <div class="blog-image" style="background: linear-gradient(135deg, {% cycle '#667eea 0%, #764ba2' '#36d1dc 0%, #5b86e5' '#2d3561 0%, #4a3f7a' '#f093fb 0%, #f5576c' '#4facfe 0%, #00f2fe' '#43e97b 0%, #38f9d7' %} 100%);">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">                {% else %}
+                <div style="font-size: 60px; color: rgba(255,255,255,0.9);">
+                    {% if 'React' in post.category.name %}⚛️
+                    {% elif 'Angular' in post.category.name %}🅰️
+                    {% elif 'JavaScript' in post.category.name %}JS
+                    {% elif 'UI' in post.category.name %}🎨
+                    {% else %}💻{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="blog-content">
+                <div class="blog-tag">{{ post.category.name }}</div>
+                <h3 class="blog-title">{{ post.title }}</h3>
+                <p class="blog-description">{{ post.description|truncatewords:20 }}</p>
+                <div class="blog-meta">
+                    <div class="author-avatar">{{ post.author|slice:":1"|upper }}</div>
+                    <div class="blog-meta-text">
+                        <div class="author-name">{{ post.author }}</div>
+                        <div class="blog-date">{{ post.created_at|date:"d M Y" }}</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="no-posts">
+            <h2>No posts found</h2>
+            <p>Try searching for something else or check back later.</p>
+        </div>
+    {% endif %}
+</section>
+
+<!-- Pagination -->
+{% if posts.has_other_pages %}
+<div class="pagination">
+    {% if posts.has_previous %}
+        <a href="?page=1{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">First</a>
+        <a href="?page={{ posts.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Previous</a>
+    {% endif %}
+
+    <span class="current">Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+
+    {% if posts.has_next %}
+        <a href="?page={{ posts.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
+        <a href="?page={{ posts.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

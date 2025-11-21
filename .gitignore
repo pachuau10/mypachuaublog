@@ -1,0 +1,48 @@
+# ----------------------------------------------------------------------
+# Python/Django Specific Ignored Files
+# ----------------------------------------------------------------------
+
+# Virtual Environment
+# Ignores the folder created by 'python -m venv' or 'virtualenv'
+# The user's environment should be managed locally.
+venv/
+env/
+__pycache__/
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+*.so
+
+# Django/Web Development Artifacts
+db.sqlite3          # Default Django database file
+/static/            # Collected static files (production deployment)
+/staticfiles/       # Alias for collected static files
+
+# Media uploaded by users (files uploaded to Cloudinary are often handled by Django's storage, 
+# but this covers local storage if you have it.)
+/media/
+
+# IDE and Editor Directories and Files
+.idea/              # PyCharm/IntelliJ
+.vscode/            # VS Code
+*.swp
+*~
+.DS_Store           # macOS files
+
+# ----------------------------------------------------------------------
+# Dependencies and Configuration
+# ----------------------------------------------------------------------
+
+# Dependencies installed by pip
+/pip-wheel-cache/
+/wheels/
+/build/
+dist/
+*.egg-info/
+
+# Configuration Files (Crucial for Security!)
+# You are using python-decouple, so ignore the file that holds sensitive settings.
+.env
+*.env

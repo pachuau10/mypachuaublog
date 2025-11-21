@@ -1,0 +1,88 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.page-box {
+    max-width: 800px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.08);
+}
+
+.page-box h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.page-box p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #444;
+}
+
+/* Contact form */
+.page-box form {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.page-box form input,
+.page-box form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.page-box form textarea {
+    height: 140px;
+    resize: none;
+}
+
+.btn-send {
+    padding: 12px;
+    background: #ff9900;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-send:hover {
+    opacity: .9;
+}
+
+</style>
+<section class="page-container">
+    <div class="page-box">
+        <h1>About Me</h1>
+        <p>
+            Welcome to my blog! I share articles on technology, web development,
+            tutorials,politics and useful guides to help you learn and grow.
+        </p>
+
+        <p>
+            As a driven 19-year-old from Keitum, Aizawl, Mizoram, I see myself as a passionate Tech Lover and Learner, always eager to dive into new projects and troubleshoot complex issues, like getting a modern Django blog template up and running. My current academic focus is my JEE coaching, which takes up a significant part of my time and reflects my ambition for a career in technology. Beyond the technical and the academic, I also have a keen interest in politics, which keeps me engaged with current affairs and the broader structure of our society. I aim to successfully balance this blend of technical skill, academic rigor, and civic awareness as I move forward.
+        </p>
+
+        <p>
+            Thank you for visiting — stay tuned for more awesome content!
+        </p>
+    </div>
+</section>
+{% endblock %}

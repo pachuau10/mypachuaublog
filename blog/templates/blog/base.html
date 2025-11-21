@@ -1,0 +1,689 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-L7xj5C6vf+...==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>{% block title %}Chhohreivung    {% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* Header - Sticky */
+        header {
+            background-color: white;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border-radius: 50%;
+            margin-right: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            color: #ff6b35;
+        }
+
+        .logo-text-black {
+            color: #333;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ff6b35;
+        }
+
+        /* Category Dropdown */
+        .category-dropdown {
+            position: relative;
+        }
+
+        .category-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+            padding: 5px 10px;
+        }
+
+        .category-btn:hover {
+            color: #ff6b35;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 240px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            margin-top: 15px;
+            z-index: 1001;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+
+        .dropdown-content.active {
+            display: block;
+            animation: fadeInDown 0.3s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .dropdown-content a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-size: 15px;
+        }
+
+        .dropdown-content a::before {
+            content: '▶';
+            font-size: 10px;
+            color: #ff6b35;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: linear-gradient(90deg, #fff5f2 0%, white 100%);
+            color: #ff6b35;
+            border-left-color: #ff6b35;
+            padding-left: 25px;
+            font-weight: 500;
+        }
+
+        .dropdown-content a:hover::before {
+            transform: translateX(5px);
+        }
+
+        .dropdown-content a:not(:last-child) {
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .subscribe-btn {
+            background-color: #ff6b35;
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .subscribe-btn:hover {
+            background-color: #e55a2a;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Mobile Navigation Sidebar */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 350px;
+            height: 100%;
+            background-color: white;
+            z-index: 9999;
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease-in-out;
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        .mobile-nav.active {
+            right: 0;
+        }
+
+        .mobile-nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .mobile-nav-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .mobile-nav-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .mobile-search {
+            margin-bottom: 30px;
+        }
+
+        .mobile-search input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .mobile-nav-links > a {
+            color: #333;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobile-category {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .mobile-category-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            padding: 15px 0;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mobile-category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            padding-left: 15px;
+            background: linear-gradient(180deg, #fafafa 0%, white 100%);
+            margin-top: 5px;
+            border-radius: 8px;
+        }
+
+        .mobile-category-content.active {
+            max-height: 400px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .mobile-category-content a {
+            font-size: 16px;
+            color: #666;
+            padding: 12px 0 12px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .mobile-category-content a::before {
+            content: '◆';
+            color: #ff6b35;
+            font-size: 10px;
+        }
+
+        .mobile-subscribe-btn {
+            background-color: #ff6b35;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-top: 30px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        /* Messages */
+        .messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 10000;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .alert-error {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .alert-info {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px 5% 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #ff6b35;
+        }
+
+        .footer-section p {
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: #ff6b35;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .social-icon:hover {
+            background-color: #ff6b35;
+            transform: translateY(-3px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .newsletter-form button {
+            background-color: #ff6b35;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+
+            .subscribe-btn {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    .mobile-search form {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-search input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.mobile-search .icon-btn {
+    margin-left: 8px;
+    padding: 10px 12px;
+    font-size: 18px;
+    background: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+footer .social-icons a {
+    color: #fff;
+    margin: 0 10px;
+    font-size: 18px;
+    transition: color 0.3s;
+}
+
+footer .social-icons a:hover {
+    color: #ff9900; /* Highlight on hover */
+}
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'home' %}" class="logo">
+            <div class="logo-icon">👤</div>
+            <span class="logo-text">PACH</span><span class="logo-text-black">UAU</span>
+        </a>
+        <nav>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'about' %}">About Me</a>
+            <div class="category-dropdown">
+                <button class="category-btn" onclick="toggleDropdown(event)">
+                    Categories ▼
+                </button>
+                <div class="dropdown-content" id="categoryDropdown">
+                    {% for category in categories %}
+                    <a href="?category={{ category.slug }}">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <a href="{% url 'contact' %}">Contact Me</a>
+        </nav>
+        <a href="https://youtube.com/@pachuau_10" class="subscribe-btn" target="_blank">Subscribe ▶</a>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="mobile-nav-close" onclick="toggleMobileMenu()">×</button>
+        
+<div class="mobile-search">
+    <form method="GET" action="{% url 'home' %}">
+        <input type="text" name="search" placeholder="Search..." value="{{ search_query|default:'' }}">
+        <button type="submit" class="icon-btn">🔍</button>
+    </form>
+</div>
+
+
+        <div class="mobile-nav-links">
+            <a href="{% url 'home' %}" onclick="toggleMobileMenu()">Home</a>
+            <a href="{% url 'about' %}" onclick="toggleMobileMenu()">About Me</a>
+            
+            <div class="mobile-category">
+                <button class="mobile-category-btn" onclick="toggleMobileCategory()">
+                    Categories
+                    <span id="categoryArrow">▼</span>
+                </button>
+                <div class="mobile-category-content" id="mobileCategoryContent">
+                    {% for category in categories %}
+                    <a href="?category={{ category.slug }}" onclick="toggleMobileMenu()">{{ category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <a href="{% url 'contact' %}" onclick="toggleMobileMenu()">Contact Me</a>
+            <button href="https://youtube.com/@pachuau_10" class="mobile-subscribe-btn">Subscribe ▶</button>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="logo" style="margin-bottom: 20px;">
+                    <div class="logo-icon">👤</div>
+                    <span class="logo-text">PACH</span><span style="color: white;">UAU</span>
+                </div>
+                <p>Learn coding with fun! Pachuau provides high-quality tutorials on React, Angular, React Native, and modern web development.</p>
+                <div class="social-icons">
+<a href="https://www.facebook.com/ramduhawma.pc" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://github.com/pachuau10" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.instagram.com/_pachuau10?igsh=MTVlaTVqeXU5cmF0ZQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'about' %}">About Me</a></li>
+        <li><a href="{% url 'home' %}">Blog</a></li>
+        <li><a href="{% url 'contact' %}">Contact Me</a></li>
+
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    {% for category in categories %}
+                    <li><a href="?category={{ category.slug }}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <p>Subscribe to our newsletter for the latest tutorials and updates.</p>
+                <form class="newsletter-form" method="POST" action="{% url 'subscribe' %}">
+                    {% csrf_token %}
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Pachuau. All rights reserved. | Made with ❤️ for everyone</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const overlay = document.getElementById('mobileNavOverlay');
+            mobileNav.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : 'auto';
+        }
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            document.getElementById('categoryDropdown').classList.toggle('active');
+        }
+
+        function toggleMobileCategory() {
+            const content = document.getElementById('mobileCategoryContent');
+            const arrow = document.getElementById('categoryArrow');
+            content.classList.toggle('active');
+            arrow.textContent = content.classList.contains('active') ? '▲' : '▼';
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.category-dropdown')) {
+                document.getElementById('categoryDropdown').classList.remove('active');
+            }
+        });
+
+        // Auto-hide messages
+        setTimeout(() => {
+            const messages = document.querySelector('.messages');
+            if (messages) messages.style.display = 'None';
+        }, 5000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
