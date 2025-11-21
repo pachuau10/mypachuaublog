@@ -11,8 +11,11 @@
 
 <!-- Essential Open Graph Tags -->
 <meta property="og:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma{% endif %}">
+
 <meta property="og:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
-<meta property="og:image" content="{% if post and post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/default-og-image.jpg' %}{% endif %}">
+
+<meta property="og:image" content="{% if post and post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}https://pachuaublog.up.railway.app/static/images/default-og-image.jpg{% endif %}">
+
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
 <meta property="og:type" content="{% if post %}article{% else %}website{% endif %}">
 <meta property="og:site_name" content="PC Ramduhawma">
@@ -23,8 +26,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma - Learn with Fun{% endif %}">
 <meta name="twitter:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}High-quality tutorials on React, Angular, React Native, and modern web development{% endif %}">
-<meta name="twitter:image" content="{% if post and post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/default-og-image.jpg' %}{% endif %}">
-
+<meta name="twitter:image" content="{% if post and post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}https://pachuaublog.up.railway.app/static/images/default-og-image.jpg{% endif %}">
    
     <style>
         * {
