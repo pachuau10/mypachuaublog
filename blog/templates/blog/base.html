@@ -28,8 +28,8 @@
 
 <!-- Twitter Card Tags -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma - Learn with Fun{% endif %}">
-<meta name="twitter:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}High-quality tutorials on React, Angular, React Native, and modern web development{% endif %}">
+<meta name="twitter:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma{% endif %}">
+<meta name="twitter:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
 
 {% if post and post.image %}
 <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
