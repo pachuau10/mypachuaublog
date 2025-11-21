@@ -10,14 +10,14 @@
 
 
 <!-- Essential Open Graph Tags -->
-<meta property="og:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma {% endif %}">
+<meta property="og:title" content="{% if post %}{{ post.title }}{% else %}PC Ramduhawma - Learn with Fun{% endif %}">
 
-<meta property="og:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
+<meta property="og:description" content="{% if post %}{{ post.description|truncatewords:30 }}{% else %}Learn coding with fun! High-quality tutorials on React, Angular, React Native, and modern web development. I share articles on technology, web development, tutorials, politics and useful guides to help you learn and grow.{% endif %}">
 
 {% if post and post.image %}
 <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
 {% else %}
-<meta property="og:image" content="https://pachuaublog.up.railway.app/static/images/default-og-image.jpg">
+<meta property="og:image" content="https://res.cloudinary.com/dpsmjarzo/image/upload/v1763749073/default-og-image.jpg_sacy48.jpg">
 {% endif %}
 
 <meta property="og:url" content="{{ request.build_absolute_uri }}">
@@ -34,9 +34,8 @@
 {% if post and post.image %}
 <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}">
 {% else %}
-<meta name="twitter:image" content="https://pachuaublog.up.railway.app/static/images/default-og-image.jpg">
+<meta name="twitter:image" content="https://res.cloudinary.com/dpsmjarzo/image/upload/v1763749073/default-og-image.jpg_sacy48.jpg">
 {% endif %}
-   
     <style>
         * {
             margin: 0;
