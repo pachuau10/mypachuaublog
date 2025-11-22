@@ -3,7 +3,6 @@ Django settings for blog_pach project.
 """
 
 
-
 import csv
 from pathlib import Path
 import os
@@ -32,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # Essential for static file management
 
     'blog',
     'ckeditor',
@@ -112,7 +111,11 @@ USE_TZ = True
 # ========================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For production collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')#For production collectstatic
+
+# --- FIX: Use Cloudinary for serving static files in production ---
+# This ensures that files like /static/admin/css/base.css are found on the CDN.
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
 
 # ========================
 # MEDIA / CLOUDINARY
@@ -124,7 +127,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
-# 2. Configure the native Cloudinary library for template tags (THIS IS THE MISSING STEP)
+#Configure the native Cloudinary library for template tags 
 cloudinary.config( 
     cloud_name = config('CLOUDINARY_CLOUD_NAME'), 
     api_key = config('CLOUDINARY_API_KEY'), 
@@ -132,7 +135,6 @@ cloudinary.config(
     secure = True # Recommended to use HTTPS
 )
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 
 # ========================
