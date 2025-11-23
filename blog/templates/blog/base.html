@@ -795,44 +795,6 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
             arrow.innerHTML = '▲'; // Up arrow
             content.classList.add('active');
         }
-    }function toggleDropdown(event) {
-        event.preventDefault(); // Stop default action (if any)
-        const dropdown = document.getElementById("categoryDropdown");
-        dropdown.classList.toggle("active");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-        if (!event.target.matches('.category-btn')) {
-            const dropdown = document.getElementById("categoryDropdown");
-            if (dropdown && dropdown.classList.contains('active')) {
-                dropdown.classList.remove('active');
-            }
-        }
-    }
-    
-    // 2. Mobile Menu Toggle
-    function toggleMobileMenu() {
-        document.getElementById("mobileNav").classList.toggle("active");
-        document.getElementById("mobileNavOverlay").classList.toggle("active");
-        // Optionally lock body scroll when active
-        document.body.classList.toggle("menu-open"); 
-    }
-
-    // 3. Mobile Category Accordion
-    function toggleMobileCategory() {
-        const content = document.getElementById("mobileCategoryContent");
-        const arrow = document.getElementById("categoryArrow");
-        
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-            arrow.innerHTML = '▼'; // Down arrow
-            content.classList.remove('active');
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-            arrow.innerHTML = '▲'; // Up arrow
-            content.classList.add('active');
-        }
     }
     </script>
 
