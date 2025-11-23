@@ -395,6 +395,17 @@
         {% endfor %}
     </div>
 </section>
+<section class="ad-container" style="padding: 40px 5%; text-align: center;">
+    <ins class="adsbygoogle"
+        style="display:block; max-width: 900px; margin: 0 auto;"
+        data-ad-client="ca-pub-4913010328689287"
+        data-ad-slot="4999867192"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</section>
 
 <section class="blog-grid">
     {% if posts %}
@@ -453,6 +464,7 @@
         <a href="?page={{ posts.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Next</a>
         <a href="?page={{ posts.paginator.num_pages }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}">Last</a>
     {% endif %}
+    
 </div>
 {% endif %}
 
