@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # Essential for static file management
+    'django.contrib.staticfiles',
+    'ckeditor_uploader', # Essential for static file management
 
     'blog',
     'ckeditor',
@@ -46,6 +47,44 @@ INSTALLED_APPS = [
     'cloudinary_storage',
 ]
 
+# Required: Upload path for CKEditor
+CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
+
+# CKEditor custom configurations
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Bold', 'Italic', 'Underline', 'Strike'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['RemoveFormat', 'Source'],
+            ['Image', 'Table', 'HorizontalRule'],
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['TextColor', 'BGColor'],
+            ['Maximize'],
+        ],
+        'height': 400,
+        'width': '100%',
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'extraPlugins': ','.join([
+            'uploadimage',
+            'image2',
+        ]),
+        'removePlugins': 'image',
+        'image2_alignClasses': ['image-align-left', 'image-align-center', 'image-align-right'],
+    },
+}
+
+# Security settings for CKEditor
+CKEDITOR_ALLOW_NONIMAGE_FILES = False  # Only allow images
+CKEDITOR_RESTRICT_BY_USER = False
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_RESTRICT_BY_DATE = False
+
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+CKEDITOR_STORAGE_BACKEND = 'blog.storage.CKEditorCloudinaryStorage'
 # ========================
 # MIDDLEWARE
 # ========================

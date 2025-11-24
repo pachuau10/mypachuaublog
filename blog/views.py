@@ -47,7 +47,8 @@ def post_detail(request, slug):
         'post': post,
         'related_posts': related_posts,
     }
-    return render(request, 'blog/post_detail.html', context)
+    categories = Category.objects.all()
+    return render(request, 'blog/post_detail.html', context,{'categories': categories})
 
 def subscribe_newsletter(request):
     if request.method == 'POST':
@@ -87,5 +88,7 @@ def contact(request):
         
         messages.success(request, 'Thank you! Your message has been sent successfully. I will get back to you soon!')
         return redirect('contact')
+    categories = Category.objects.all()
+
     
-    return render(request, 'blog/contact.html')
+    return render(request, 'blog/contact.html',{'categories': categories})

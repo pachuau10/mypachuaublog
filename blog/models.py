@@ -4,6 +4,8 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils import timezone
 from cloudinary.models import CloudinaryField
+from ckeditor_uploader.fields import RichTextUploadingField
+
 
 
 
@@ -23,7 +25,7 @@ class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     description = models.TextField()
-    content = RichTextField()
+    content = RichTextUploadingField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='posts')
     image = CloudinaryField('image', blank=True, null=True)  # Cloudinary will handle
     author_image = CloudinaryField('author_image', blank=True, null=True)
