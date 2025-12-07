@@ -102,14 +102,15 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .post-meta > div > div:first-child {
@@ -311,6 +312,117 @@
     color: #555;
 }
 
+/* ---------- SHARE SECTION ---------- */
+.share-section {
+    margin-top: 50px;
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.share-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.share-title::before {
+    content: "📤";
+    font-size: 24px;
+}
+
+.share-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+    cursor: pointer;
+}
+
+.share-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.share-btn i {
+    font-size: 18px;
+}
+
+/* Facebook */
+.share-facebook {
+    background: linear-gradient(135deg, #1877f2 0%, #0c63d4 100%);
+}
+
+.share-facebook:hover {
+    background: linear-gradient(135deg, #0c63d4 0%, #084d9f 100%);
+}
+
+/* Twitter/X */
+.share-twitter {
+    background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+}
+
+.share-twitter:hover {
+    background: linear-gradient(135deg, #0d8bd9 0%, #0770b3 100%);
+}
+
+/* LinkedIn */
+.share-linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+}
+
+.share-linkedin:hover {
+    background: linear-gradient(135deg, #005885 0%, #003f5c 100%);
+}
+
+/* WhatsApp */
+.share-whatsapp {
+    background: linear-gradient(135deg, #25d366 0%, #1ebe57 100%);
+}
+
+.share-whatsapp:hover {
+    background: linear-gradient(135deg, #1ebe57 0%, #17a948 100%);
+}
+
+/* Copy Link */
+.share-copy {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+}
+
+.share-copy:hover {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+}
+
+.share-copy.copied {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+}
+/* Instagram */
+.share-instagram {
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+}
+
+.share-instagram:hover {
+    background: linear-gradient(135deg, #e6683c 0%, #dc2743 25%, #cc2366 50%, #bc1888 75%, #8a3ab9 100%);
+}
 /* ---------- FOOTER ---------- */
 .post-footer {
     margin-top: 60px;
@@ -343,6 +455,10 @@
 @media(max-width: 768px) {
     .post-container {
         padding: 30px 5%;
+    }
+
+    .post-details {
+        padding: 30px 20px;
     }
 
     .post-title {
@@ -397,6 +513,27 @@
         padding: 12px 25px;
         font-size: 15px;
     }
+
+    .share-section {
+        padding: 20px;
+    }
+    
+    .share-buttons {
+        gap: 10px;
+    }
+    
+    .share-btn {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+    
+    .share-btn span {
+        display: none; /* Hide text on mobile, show only icons */
+    }
+    
+    .share-btn i {
+        margin: 0;
+    }
 }
 
 /* ---------- SMOOTH ANIMATIONS ---------- */
@@ -404,7 +541,8 @@
 .post-category,
 .post-title,
 .post-meta,
-.post-content {
+.post-content,
+.share-section {
     animation: fadeInUp 0.6s ease-out;
 }
 
@@ -433,20 +571,10 @@
 
 .post-content {
     animation-delay: 0.4s;
-    
-}
-.author-avatar {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    overflow: hidden;
-    flex-shrink: 0;
 }
 
-.author-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.share-section {
+    animation-delay: 0.5s;
 }
 </style>
 {% endblock %}
@@ -477,11 +605,12 @@
 
             <div class="post-meta">
                 <div class="author-avatar">
-        {% if post.author_image %}
-            <img src="{{ post.author_image.url }}" alt="{{ post.author }}">
-        {% else %}
-            <img src="https://res.cloudinary.com/dpsmjarzo/image/upload/v1763828299/profileduha_m0rlty.jpg" alt="{{ post.author }}">
-        {% endif %}                </div>
+                    {% if post.author_image %}
+                        <img src="{{ post.author_image.url }}" alt="{{ post.author }}">
+                    {% else %}
+                        <img src="https://res.cloudinary.com/dpsmjarzo/image/upload/v1763828299/profileduha_m0rlty.jpg" alt="{{ post.author }}">
+                    {% endif %}
+                </div>
                 <div>
                     <div><strong>{{ post.author }}</strong></div>
                     <div style="color:#777;">{{ post.created_at|date:"d M Y" }}</div>
@@ -491,6 +620,51 @@
             <div class="post-content">
                 {{ post.content|safe }}
             </div>
+
+            <!-- SHARE SECTION -->
+
+                        <div class="share-section">
+                <div class="share-title">Share this article</div>
+                <div class="share-buttons">
+
+                                <!-- WhatsApp -->
+            <a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ request.build_absolute_uri }}" 
+                       target="_blank" 
+                       class="share-btn share-whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+            </a>
+                    
+
+
+                                                            <!-- Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                       target="_blank" 
+                       class="share-btn share-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                        <span>Facebook</span>
+                    </a>
+
+
+                    <a href="https://www.instagram.com/" 
+                    target="_blank" 
+                    onclick="alert('Copy the link and share it on your Instagram story or post!'); return false;"
+                    class="share-btn share-instagram">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </a>
+
+                    
+
+                    <!-- Copy Link -->
+                    <button onclick="copyShareLink('{{ request.build_absolute_uri }}')" 
+                            class="share-btn share-copy" 
+                            id="copyShareBtn">
+                        <i class="fas fa-link"></i>
+                        <span id="copyShareText">Copy Link</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -499,4 +673,26 @@
     </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyShareLink(url) {
+    navigator.clipboard.writeText(url).then(() => {
+        const btn = document.getElementById('copyShareBtn');
+        const text = document.getElementById('copyShareText');
+        
+        btn.classList.add('copied');
+        text.textContent = 'Copied!';
+        
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            text.textContent = 'Copy Link';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy link');
+    });
+}
+</script>
 {% endblock %}
