@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ckeditor_uploader', # Essential for static file management
-
+    'ckeditor_uploader', 
+    'codemirror2',
     'blog',
     'ckeditor',
     'cloudinary',
@@ -63,15 +63,21 @@ CKEDITOR_CONFIGS = {
             ['Styles', 'Format', 'Font', 'FontSize'],
             ['TextColor', 'BGColor'],
             ['Maximize'],
+            ['CodeSnippet'], 
         ],
         'height': 400,
         'width': '100%',
-        'filebrowserUploadUrl': '/ckeditor/upload/',
-        'filebrowserBrowseUrl': '/ckeditor/browse/',
+
         'extraPlugins': ','.join([
             'uploadimage',
             'image2',
+            'codesnippet',       # REQUIRED FOR CODE EDITOR
         ]),
+
+        'codeSnippet_theme': 'monokai_sublime',
+
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
         'removePlugins': 'image',
         'image2_alignClasses': ['image-align-left', 'image-align-center', 'image-align-right'],
     },

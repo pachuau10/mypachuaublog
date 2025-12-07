@@ -33,6 +33,11 @@ class BlogPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(default=True)
+
+    enable_code_runner = models.BooleanField(
+        default=False, 
+        help_text="Enable interactive code execution for code blocks in this post"
+    )
     
     class Meta:
         ordering = ['-created_at']

@@ -18,11 +18,12 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     form = BlogPostAdminForm  # <-- use CKEditor form
-    list_display = ['title', 'category', 'author', 'created_at', 'is_published']
-    list_filter = ['category', 'is_published', 'created_at']
+    list_display = ['title', 'category', 'author', 'enable_code_runner', 'created_at', 'is_published']
+    list_filter = ['category', 'is_published', 'enable_code_runner', 'created_at']
     search_fields = ['title', 'description', 'content']
     prepopulated_fields = {'slug': ('title',)}
     date_hierarchy = 'created_at'
+    list_editable = ['enable_code_runner']  # Quick toggle from list view
     
     fieldsets = (
         ('Post Info', {
@@ -30,6 +31,11 @@ class BlogPostAdmin(admin.ModelAdmin):
         }),
         ('Content', {
             'fields': ('description', 'content', 'image')
+        }),
+        ('Interactive Features', {
+            'fields': ('enable_code_runner',),
+            'classes': ('collapse',),
+            'description': 'Enable code execution for code blocks in this post'
         }),
         ('Author Info', {
             'fields': ('author', 'author_image')
@@ -47,7 +53,7 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ['is_read', 'created_at']
     search_fields = ['name', 'email', 'message']
     readonly_fields = ['created_at']
-    list_editable = ['is_read']  # Mark as read directly from list
+    list_editable = ['is_read']  # Mark as read directly from list (CORRECT - this is for ContactMessage)
     
     fieldsets = (
         ('Contact Info', {
