@@ -797,7 +797,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
         }
     }
     </script>
- <script>
+<script>
     // Interactive Code Runner for Blog Posts
     document.addEventListener('DOMContentLoaded', function() {
         // Find all code blocks created by CKEditor's CodeSnippet plugin
@@ -846,14 +846,51 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         `;
         
-        // Replace pre/code with editable textarea
+        // Create editor container with syntax highlighting
+        const editorContainer = document.createElement('div');
+        editorContainer.style.cssText = `
+            position: relative;
+            width: 100%;
+            min-height: 80px;
+            background: #2d2d30;
+        `;
+        
+        // Create highlighted code display (behind textarea)
+        const highlightedCode = document.createElement('pre');
+        highlightedCode.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 80px;
+            padding: 15px;
+            margin: 0;
+            background: transparent;
+            color: transparent;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        const codeElement = document.createElement('code');
+        codeElement.className = `language-${language}`;
+        highlightedCode.appendChild(codeElement);
+        
+        // Replace pre/code with editable textarea (on top)
         const textarea = document.createElement('textarea');
         textarea.value = codeBlock.textContent;
         textarea.style.cssText = `
+            position: relative;
             width: 100%;
-            min-height: 150px;
+            min-height: 80px;
+            max-height: 600px;
             padding: 15px;
-            background: #2d2d30;
+            background: transparent;
             color: #d4d4d4;
             border: none;
             font-family: 'Courier New', Consolas, monospace;
@@ -862,7 +899,43 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
             resize: vertical;
             outline: none;
             tab-size: 4;
+            overflow-y: auto;
+            z-index: 2;
+            caret-color: white;
         `;
+        
+        // Function to update syntax highlighting
+        function updateHighlighting() {
+            codeElement.textContent = textarea.value;
+            if (window.Prism) {
+                Prism.highlightElement(codeElement);
+            }
+        }
+        
+        // Initial highlighting
+        updateHighlighting();
+        
+        // Auto-resize function
+        function autoResize() {
+            const height = Math.min(textarea.scrollHeight, 600);
+            textarea.style.height = height + 'px';
+            highlightedCode.style.height = height + 'px';
+        }
+        
+        // Initial resize
+        setTimeout(autoResize, 0);
+        
+        // Resize on input and update highlighting
+        textarea.addEventListener('input', function() {
+            updateHighlighting();
+            autoResize();
+        });
+        
+        // Sync scroll between textarea and highlighted code
+        textarea.addEventListener('scroll', function() {
+            highlightedCode.scrollTop = textarea.scrollTop;
+            highlightedCode.scrollLeft = textarea.scrollLeft;
+        });
         
         // Add smart editor features
         textarea.addEventListener('keydown', function(e) {
@@ -875,6 +948,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
                 
                 this.value = this.value.substring(0, start) + spaces + this.value.substring(end);
                 this.selectionStart = this.selectionEnd = start + spaces.length;
+                updateHighlighting();
             }
             
             // Enter key - auto-indent
@@ -898,6 +972,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
                 
                 this.value = this.value.substring(0, start) + newText + this.value.substring(start);
                 this.selectionStart = this.selectionEnd = start + newText.length;
+                updateHighlighting();
             }
             
             // Auto-close brackets, quotes, parentheses
@@ -922,6 +997,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
                                 this.value.substring(end);
                     this.selectionStart = start + 1;
                     this.selectionEnd = end + 1;
+                    updateHighlighting();
                 } else {
                     // Insert closing pair
                     e.preventDefault();
@@ -929,6 +1005,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
                                 e.key + pairs[e.key] + 
                                 this.value.substring(start);
                     this.selectionStart = this.selectionEnd = start + 1;
+                    updateHighlighting();
                 }
             }
         });
@@ -1028,7 +1105,9 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
         // Wrap everything
         pre.parentNode.insertBefore(wrapper, pre);
         wrapper.appendChild(header);
-        wrapper.appendChild(textarea);  // Use textarea instead of pre
+        editorContainer.appendChild(highlightedCode);
+        editorContainer.appendChild(textarea);
+        wrapper.appendChild(editorContainer);
         wrapper.appendChild(outputDiv);
         pre.style.display = 'none';  // Hide original pre tag
         
@@ -1177,9 +1256,99 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
         iframeDoc.close();
     }
 
-    // Add custom scrollbar styles
+    // Add custom scrollbar styles and Prism CSS
     const style = document.createElement('style');
     style.textContent = `
+        /* Prism Tomorrow Night theme - syntax highlighting colors */
+        code[class*="language-"],
+        pre[class*="language-"] {
+            color: #ccc;
+            background: none;
+            font-family: 'Courier New', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            text-align: left;
+            white-space: pre;
+            word-spacing: normal;
+            word-break: normal;
+            word-wrap: normal;
+            line-height: 1.5;
+            tab-size: 4;
+        }
+
+        .token.comment,
+        .token.block-comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #999;
+        }
+
+        .token.punctuation {
+            color: #ccc;
+        }
+
+        .token.tag,
+        .token.attr-name,
+        .token.namespace,
+        .token.deleted {
+            color: #e2777a;
+        }
+
+        .token.function-name {
+            color: #6196cc;
+        }
+
+        .token.boolean,
+        .token.number,
+        .token.function {
+            color: #f08d49;
+        }
+
+        .token.property,
+        .token.class-name,
+        .token.constant,
+        .token.symbol {
+            color: #f8c555;
+        }
+
+        .token.selector,
+        .token.important,
+        .token.atrule,
+        .token.keyword,
+        .token.builtin {
+            color: #cc99cd;
+        }
+
+        .token.string,
+        .token.char,
+        .token.attr-value,
+        .token.regex,
+        .token.variable {
+            color: #7ec699;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url {
+            color: #67cdcc;
+        }
+
+        .token.important,
+        .token.bold {
+            font-weight: bold;
+        }
+        
+        .token.italic {
+            font-style: italic;
+        }
+
+        .token.entity {
+            cursor: help;
+        }
+
+        .token.inserted {
+            color: green;
+        }
+        
         .code-output::-webkit-scrollbar {
             width: 8px;
         }
@@ -1214,6 +1383,23 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
         }
     `;
     document.head.appendChild(style);
+    
+    // Load Prism.js for syntax highlighting if not already loaded
+    if (!window.Prism) {
+        const prismScript = document.createElement('script');
+        prismScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js';
+        document.head.appendChild(prismScript);
+        
+        // Load language components
+        prismScript.onload = () => {
+            const langs = ['python', 'javascript', 'css', 'markup'];
+            langs.forEach(lang => {
+                const langScript = document.createElement('script');
+                langScript.src = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-${lang}.min.js`;
+                document.head.appendChild(langScript);
+            });
+        };
+    }
     </script>
 
 </body>
