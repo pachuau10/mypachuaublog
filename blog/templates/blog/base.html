@@ -846,119 +846,68 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         `;
         
-        // Create editor container with syntax highlighting
-        const editorContainer = document.createElement('div');
-        editorContainer.style.cssText = `
-            position: relative;
-            width: 100%;
-            min-height: 80px;
-            background: #2d2d30;
-        `;
-        
-        // Create highlighted code display (behind textarea)
-        const highlightedCode = document.createElement('pre');
-        highlightedCode.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            min-height: 80px;
-            padding: 15px;
-            margin: 0;
-            background: transparent;
-            color: transparent;
-            font-family: 'Courier New', Consolas, monospace;
-            font-size: 14px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            pointer-events: none;
-            z-index: 1;
-        `;
-        
-        const codeElement = document.createElement('code');
-        codeElement.className = `language-${language}`;
-        highlightedCode.appendChild(codeElement);
-        
-        // Replace pre/code with editable textarea (on top)
-        const textarea = document.createElement('textarea');
-        textarea.value = codeBlock.textContent;
-        textarea.style.cssText = `
-            position: relative;
+        // Create contenteditable div for code editing
+        const editorDiv = document.createElement('div');
+        editorDiv.contentEditable = 'true';
+        editorDiv.spellcheck = false;
+        editorDiv.className = `language-${language}`;
+        editorDiv.textContent = codeBlock.textContent;
+        editorDiv.style.cssText = `
             width: 100%;
             min-height: 80px;
             max-height: 600px;
             padding: 15px;
-            background: transparent;
+            background: #2d2d30;
             color: #d4d4d4;
             border: none;
             font-family: 'Courier New', Consolas, monospace;
             font-size: 14px;
             line-height: 1.5;
-            resize: vertical;
             outline: none;
             tab-size: 4;
             overflow-y: auto;
-            z-index: 2;
-            caret-color: white;
+            white-space: pre;
+            overflow-wrap: normal;
         `;
-        
-        // Function to update syntax highlighting
-        function updateHighlighting() {
-            codeElement.textContent = textarea.value;
-            if (window.Prism) {
-                Prism.highlightElement(codeElement);
-            }
+
+        // Apply initial syntax highlighting
+        if (window.Prism) {
+            Prism.highlightElement(editorDiv);
         }
         
-        // Initial highlighting
-        updateHighlighting();
-        
-        // Auto-resize function
-        function autoResize() {
-            const height = Math.min(textarea.scrollHeight, 600);
-            textarea.style.height = height + 'px';
-            highlightedCode.style.height = height + 'px';
-        }
-        
-        // Initial resize
-        setTimeout(autoResize, 0);
-        
-        // Resize on input and update highlighting
-        textarea.addEventListener('input', function() {
-            updateHighlighting();
-            autoResize();
-        });
-        
-        // Sync scroll between textarea and highlighted code
-        textarea.addEventListener('scroll', function() {
-            highlightedCode.scrollTop = textarea.scrollTop;
-            highlightedCode.scrollLeft = textarea.scrollLeft;
+        // Update syntax highlighting on input
+        let highlightTimeout;
+        editorDiv.addEventListener('input', function() {
+            clearTimeout(highlightTimeout);
+            highlightTimeout = setTimeout(() => {
+                const selection = saveSelection(editorDiv);
+                const text = editorDiv.textContent;
+                editorDiv.textContent = text;
+                if (window.Prism) {
+                    Prism.highlightElement(editorDiv);
+                }
+                restoreSelection(editorDiv, selection);
+            }, 300);
         });
         
         // Add smart editor features
-        textarea.addEventListener('keydown', function(e) {
+        editorDiv.addEventListener('keydown', function(e) {
             // Tab key - insert 4 spaces
             if (e.key === 'Tab') {
                 e.preventDefault();
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                const spaces = '    '; // 4 spaces
-                
-                this.value = this.value.substring(0, start) + spaces + this.value.substring(end);
-                this.selectionStart = this.selectionEnd = start + spaces.length;
-                updateHighlighting();
+                document.execCommand('insertText', false, '    ');
             }
             
             // Enter key - auto-indent
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const start = this.selectionStart;
-                const textBeforeCursor = this.value.substring(0, start);
-                const currentLine = textBeforeCursor.split('\n').pop();
+                const selection = window.getSelection();
+                const range = selection.getRangeAt(0);
+                const textBeforeCursor = range.startContainer.textContent.substring(0, range.startOffset);
+                const lines = this.textContent.substring(0, getCaretPosition(this)).split('\n');
+                const currentLine = lines[lines.length - 1];
                 
-                // Count leading spaces/tabs for indentation
+                // Count leading spaces for indentation
                 const indent = currentLine.match(/^\s*/)[0];
                 
                 // Check if line ends with : or { for extra indent
@@ -968,45 +917,7 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
                                         currentLine.trim().endsWith('(');
                 
                 const newIndent = needsExtraIndent ? indent + '    ' : indent;
-                const newText = '\n' + newIndent;
-                
-                this.value = this.value.substring(0, start) + newText + this.value.substring(start);
-                this.selectionStart = this.selectionEnd = start + newText.length;
-                updateHighlighting();
-            }
-            
-            // Auto-close brackets, quotes, parentheses
-            const pairs = {
-                '(': ')',
-                '[': ']',
-                '{': '}',
-                '"': '"',
-                "'": "'"
-            };
-            
-            if (pairs[e.key]) {
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                
-                // If text is selected, wrap it
-                if (start !== end) {
-                    e.preventDefault();
-                    const selectedText = this.value.substring(start, end);
-                    this.value = this.value.substring(0, start) + 
-                                e.key + selectedText + pairs[e.key] + 
-                                this.value.substring(end);
-                    this.selectionStart = start + 1;
-                    this.selectionEnd = end + 1;
-                    updateHighlighting();
-                } else {
-                    // Insert closing pair
-                    e.preventDefault();
-                    this.value = this.value.substring(0, start) + 
-                                e.key + pairs[e.key] + 
-                                this.value.substring(start);
-                    this.selectionStart = this.selectionEnd = start + 1;
-                    updateHighlighting();
-                }
+                document.execCommand('insertText', false, '\n' + newIndent);
             }
         });
         
@@ -1105,20 +1016,76 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
         // Wrap everything
         pre.parentNode.insertBefore(wrapper, pre);
         wrapper.appendChild(header);
-        editorContainer.appendChild(highlightedCode);
-        editorContainer.appendChild(textarea);
-        wrapper.appendChild(editorContainer);
+        wrapper.appendChild(editorDiv);
         wrapper.appendChild(outputDiv);
         pre.style.display = 'none';  // Hide original pre tag
         
         // Add click handlers
         copyButton.addEventListener('click', () => {
-            copyToClipboard(textarea.value, copyButton);
+            copyToClipboard(editorDiv.textContent, copyButton);
         });
         
         runButton.addEventListener('click', () => {
-            runCode(textarea.value, language, outputDiv, runButton);
+            runCode(editorDiv.textContent, language, outputDiv, runButton);
         });
+    }
+
+    // Helper functions for cursor position
+    function saveSelection(el) {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            return {
+                start: getCaretPosition(el),
+                end: getCaretPosition(el)
+            };
+        }
+        return { start: 0, end: 0 };
+    }
+
+    function restoreSelection(el, savedSel) {
+        const charIndex = savedSel.start;
+        const range = document.createRange();
+        const sel = window.getSelection();
+        
+        let nodeStack = [el];
+        let node, foundStart = false;
+        let charCount = 0;
+
+        while (!foundStart && (node = nodeStack.pop())) {
+            if (node.nodeType === 3) {
+                const nextCharCount = charCount + node.length;
+                if (charIndex >= charCount && charIndex <= nextCharCount) {
+                    range.setStart(node, charIndex - charCount);
+                    range.setEnd(node, charIndex - charCount);
+                    foundStart = true;
+                }
+                charCount = nextCharCount;
+            } else {
+                let i = node.childNodes.length;
+                while (i--) {
+                    nodeStack.push(node.childNodes[i]);
+                }
+            }
+        }
+
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+
+    function getCaretPosition(element) {
+        let caretOffset = 0;
+        const selection = window.getSelection();
+        
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            const preCaretRange = range.cloneRange();
+            preCaretRange.selectNodeContents(element);
+            preCaretRange.setEnd(range.endContainer, range.endOffset);
+            caretOffset = preCaretRange.toString().length;
+        }
+        
+        return caretOffset;
     }
 
     function copyToClipboard(text, button) {
@@ -1261,7 +1228,8 @@ onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15
     style.textContent = `
         /* Prism Tomorrow Night theme - syntax highlighting colors */
         code[class*="language-"],
-        pre[class*="language-"] {
+        pre[class*="language-"],
+        div[class*="language-"] {
             color: #ccc;
             background: none;
             font-family: 'Courier New', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
