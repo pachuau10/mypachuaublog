@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
 # INSTALLED APPS
 # ========================
 INSTALLED_APPS = [
+ 
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,22 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
 ]
+
+JAZZMIN_SETTINGS = {
+    "site_title": "My Blog Admin",
+    "site_header": "Blog Administration",
+    "welcome_sign": "Welcome to your Admin Panel",
+    "site_logo": "static/images/profileduha.jpg", 
+    "copyright": "MyBlog 2025",
+    "show_ui_builder": True,  
+        "icons": {
+        "blog.Category": "fas fa-tag",
+        "blog.BlogPost": "fas fa-newspaper",
+        "blog.Newsletter": "fas fa-envelope-open",
+        "blog.ContactMessage": "fas fa-comment",
+    }
+}
+
 
 # Required: Upload path for CKEditor
 CKEDITOR_UPLOAD_PATH = "ckeditor_uploads/"
@@ -167,8 +184,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')#For production collectstatic
 
 # --- FIX: Use Cloudinary for serving static files in production ---
 # This ensures that files like /static/admin/css/base.css are found on the CDN.
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
-
+# settings.py - Ensure this conditional logic is present!
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
 # ========================
 # MEDIA / CLOUDINARY
 # ========================

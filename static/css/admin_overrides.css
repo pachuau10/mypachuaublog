@@ -1,0 +1,22 @@
+/* Make CKEditor editor full width */
+.cke_chrome {
+    width: 100% !important;
+}
+
+/* Make entire content area full width */
+.form-row.field-content,
+.field-content .form-row,
+.form-row .cke_chrome {
+    width: 100% !important;
+}
+
+/* Expand right column in Jazzmin */
+.content-wrapper .col-lg-9 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+}
+
+/* Make editor content taller */
+.cke_contents {
+    height: 450px !important;
+}
