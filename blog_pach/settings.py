@@ -20,7 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ========================
 SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = ['.vercel.app', 'now.sh', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [ 
+    '.vercel.app', 
+    'now.sh', 
+    'localhost', 
+    '127.0.0.1',
+    'chhohreivung.site',           # Your domain
+    'www.chhohreivung.site' ]
 # ========================
 # INSTALLED APPS
 # ========================
@@ -116,7 +122,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'blog_pach.urls'
 
-CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='', cast=Csv())
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS', 
+    default='https://chhohreivung.site,https://www.chhohreivung.site',
+    cast=Csv()
+)
 
 # ========================
 # TEMPLATES
