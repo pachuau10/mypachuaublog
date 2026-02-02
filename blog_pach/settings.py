@@ -20,20 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ========================
 SECRET_KEY = config('SECRET_KEY', default='your-default-secret-key')
 DEBUG = config('DEBUG', default=True, cast=bool)
-ALLOWED_HOSTS = [
-    'pachuaublog.up.railway.app',
-    '.railway.app',
-    'localhost',
-    '127.0.0.1',
-    'www.chhohreivung.site',  
-    'chhohreivung.site',     
-]
-
+ALLOWED_HOSTS = ['.vercel.app', 'now.sh', 'localhost', '127.0.0.1']
 # ========================
 # INSTALLED APPS
 # ========================
 INSTALLED_APPS = [
- 
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -113,6 +105,7 @@ CKEDITOR_STORAGE_BACKEND = 'blog.storage.CKEditorCloudinaryStorage'
 # ========================
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -180,7 +173,8 @@ USE_TZ = True
 # ========================
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')#For production collectstatic
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # --- FIX: Use Cloudinary for serving static files in production ---
 # This ensures that files like /static/admin/css/base.css are found on the CDN.
@@ -189,6 +183,9 @@ if DEBUG:
     STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 else:
     STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 # ========================
 # MEDIA / CLOUDINARY
 # ========================
