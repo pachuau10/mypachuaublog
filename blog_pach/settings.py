@@ -11,15 +11,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ========================
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool) # Set to False for Production
-ALLOWED_HOSTS = [
-    '.vercel.app', 
-    'now.sh', 
-    'localhost', 
+ALLOWED_HOSTS = ALLOWED_HOSTS = [
+    '.onrender.com',        # covers all render domains
+    'localhost',
     '127.0.0.1',
-    'chhohreivung.site', 
+    'chhohreivung.site',
     'www.chhohreivung.site'
 ]
-
 # ========================
 # INSTALLED APPS
 # ========================
